@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                                Int       @id @default(autoincrement())
+  created_at                        DateTime  @default(now())
+  updated_at                        DateTime  @default(now())
+  name                              String    @db.VarChar(50)
+  email                             String    @unique @db.VarChar(50)
+  password                          String    @db.VarChar(100)
+  address                           String?
+  profile_img                       String?
+  Follows_Follows_followerIdToUser  Follows[] @relation("Follows_followerIdToUser")
+  Follows_Follows_followingIdToUser Follows[] @relation("Follows_followingIdToUser")
+}
+
+model Follows {
+  id                             Int      @id @default(autoincrement())
+  created_at                     DateTime @default(now())
+  updated_at                     DateTime @default(now())
+  followerId                     Int
+  followingId                    Int
+  User_Follows_followerIdToUser  User     @relation("Follows_followerIdToUser", fields: [followerId], references: [id])
+  User_Follows_followingIdToUser User     @relation("Follows_followingIdToUser", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+  @@index([followingId], map: "Follows_followingId_fkey")
+}
