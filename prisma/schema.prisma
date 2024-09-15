@@ -8,26 +8,45 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @updatedAt
-  name        String    @db.VarChar(50)
-  email       String    @unique @db.VarChar(50)
-  password    String    @db.VarChar(100)
-  address     String?
-  profile_img String?
-  followers   Follows[] @relation("followers")
-  following   Follows[] @relation("following")
+  id         String    @id @default(uuid())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  name       String    @db.VarChar(50)
+  email      String    @unique @db.VarChar(50)
+  password   String    @db.VarChar(100)
+  address    Address?
+  profile    Profile?
+  followers  Follows[] @relation("followers")
+  following  Follows[] @relation("following")
 }
 
 model Follows {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
-  followerId  Int
-  followingId Int
-  follower    User     @relation("followers", fields: [followerId], references: [id])
-  following   User     @relation("following", fields: [followingId], references: [id])
+  followerId  String
+  followingId String
+  follower    User     @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
+}
+
+model Profile {
+  id          String  @id @default(uuid())
+  profile_img String?
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id],onDelete: Cascade)
+}
+
+model Address {
+  id         Int     @id @default(autoincrement())
+  number     String  @default("N/A") @db.VarChar(10)
+  street     String? @db.VarChar(50)
+  city       String? @db.VarChar(25)
+  state      String? @db.VarChar(25)
+  country    String  @db.VarChar(25)
+  postalcode String? @db.VarChar(20)
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
