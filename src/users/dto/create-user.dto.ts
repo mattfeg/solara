@@ -13,11 +13,13 @@ export class CreateUserDto implements Prisma.UserCreateInput {
   @IsString()
   password: string;
 
-  @IsString()
-  @IsOptional()
-  address: string;
+  // TODO: Correct validate address to Address Type model
+  // @IsString()
+  // @IsOptional()
+  // address: string;
 
-  @IsString()
-  @IsOptional()
-  profile_img: string;
+  // TODO: Change the validation loc profile_img to the ProfileDTO
+  // @IsString()
+  // @IsOptional()
+  // profile_img: string;
 }

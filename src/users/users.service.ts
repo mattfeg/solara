@@ -23,18 +23,18 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  update(id: number, data: UpdateUserDto) {
+  update(id: string, data: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id },
       data,
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.user.delete({ where: { id } });
   }
 }

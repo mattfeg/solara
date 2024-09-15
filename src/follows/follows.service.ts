@@ -42,7 +42,7 @@ export class FollowsService {
     });
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.prisma.follows.findUnique({
       where: { id },
       include: {
@@ -52,7 +52,7 @@ export class FollowsService {
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.prisma.follows.delete({ where: { id } });
   }
 }

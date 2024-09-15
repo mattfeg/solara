@@ -1,9 +1,9 @@
-import { IsInt } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateFollowDto {
-  @IsInt()
-  followerId: number;
+  @IsString()
+  followerId: string;
 
-  @IsInt()
-  followingId: number;
+  @IsString()
+  followingId: string;
 }
