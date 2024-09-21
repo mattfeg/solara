@@ -6,6 +6,9 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { LikesModule } from './likes/likes.module';
+import { CommentsModule } from './comments/comments.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -16,6 +19,8 @@ import { AuthGuard } from './auth/auth.guard';
       envFilePath: '../.env',
       isGlobal: true,
     }),
+    LikesModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [

@@ -9,44 +9,82 @@ datasource db {
 
 model User {
   id         String    @id @default(uuid())
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
   name       String    @db.VarChar(50)
   email      String    @unique @db.VarChar(50)
   password   String    @db.VarChar(100)
   address    Address?
   profile    Profile?
+  posts      Post[]
+  comments   Comment[]
+  likes      Like[]
   followers  Follows[] @relation("followers")
   following  Follows[] @relation("following")
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
 }
 
 model Follows {
   id          String   @id @default(uuid())
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
   followerId  String
   followingId String
   follower    User     @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
   following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   @@unique([followerId, followingId])
 }
 
 model Profile {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   profile_img String?
-  userId      String  @unique
-  user        User    @relation(fields: [userId], references: [id],onDelete: Cascade)
+  userId      String   @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 }
 
 model Address {
-  id         Int     @id @default(autoincrement())
-  number     String  @default("N/A") @db.VarChar(10)
-  street     String? @db.VarChar(50)
-  city       String? @db.VarChar(25)
-  state      String? @db.VarChar(25)
-  country    String  @db.VarChar(25)
-  postalcode String? @db.VarChar(20)
-  userId     String  @unique
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  number     String   @default("N/A") @db.VarChar(10)
+  street     String?  @db.VarChar(50)
+  city       String?  @db.VarChar(25)
+  state      String?  @db.VarChar(25)
+  country    String   @db.VarChar(25)
+  postalcode String?  @db.VarChar(20)
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Post {
+  id         String    @id @default(uuid())
+  userId     String
+  likes      Like[]
+  comments   Comment[]
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+}
+
+model Comment {
+  id         String   @id @default(uuid())
+  text       String   @db.VarChar(300)
+  userId     String
+  postId     String
+  post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Like {
+  id         String   @id @default(uuid())
+  userId     String
+  postId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
