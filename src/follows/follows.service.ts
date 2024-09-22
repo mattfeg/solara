@@ -33,18 +33,8 @@ export class FollowsService {
     });
   }
 
-  findAll() {
-    return this.prisma.follows.findMany({
-      include: {
-        follower: true,
-        following: true,
-      },
-    });
-  }
-
-  findOne(id: string) {
-    return this.prisma.follows.findUnique({
-      where: { id },
+  findAllByUser(followerId: string) {
+    return this.prisma.follows.findMany({ where: { followerId },
       include: {
         follower: true,
         following: true,

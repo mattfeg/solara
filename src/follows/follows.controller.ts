@@ -11,14 +11,9 @@ export class FollowsController {
     return this.followsService.create(createFollowDto);
   }
 
-  @Get()
-  findAll() {
-    return this.followsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.followsService.findOne(id);
+  @Get('user/:id')
+  findAll(@Param('id') id: string) {
+    return this.followsService.findAllByUser(id);
   }
 
   @Delete(':id')
