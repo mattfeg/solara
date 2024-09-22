@@ -11,14 +11,14 @@ export class CommentsService {
   }
 
   findAllByPost(userId: string) {
-    return this.prisma.comment.findMany({ where : { userId }});
+    return this.prisma.comment.findMany({ where: { userId } });
   }
 
   update(id: string, data: UpdateCommentDto) {
-    return this.prisma.comment.update({ where: {id}, data});
+    return this.prisma.comment.update({ where: { id }, data });
   }
 
   remove(id: string) {
-    return this.prisma.comment.delete({where: { id}});
+    return this.prisma.comment.delete({ where: { id } });
   }
 }
