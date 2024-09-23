@@ -2,17 +2,37 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {
-  let service: PrismaService;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PrismaService],
     }).compile();
 
-    service = module.get<PrismaService>(PrismaService);
+    prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(prisma).toBeDefined();
+  });
+
+  it('should call $connect on onModuleInit', async () => {
+    const connectSpy = jest.spyOn(prisma, '$connect').mockResolvedValue();
+
+    await prisma.onModuleInit();
+
+    expect(connectSpy).toHaveBeenCalled();
+  });
+
+  it('should call $disconnect on onModuleDestroy', async () => {
+    const disconnectSpy = jest.spyOn(prisma, '$disconnect').mockResolvedValue();
+
+    await prisma.onModuleDestroy();
+
+    expect(disconnectSpy).toHaveBeenCalled();
   });
 });

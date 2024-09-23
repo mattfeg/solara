@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { SkipAuth } from '../skipAuth/skipAuth.decorator';
+import { SkipAuth } from '../SkipAuth/SkipAuth.decorator';
 
 @UseGuards(AuthGuard)
 @Controller('auth')
@@ -19,6 +19,6 @@ export class AuthController {
   @SkipAuth()
   @Post('login')
   signIn(@Body() signInDto: Record<string, never>) {
-    return this.authService.signIn(signInDto.email, signInDto.pass);
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 }

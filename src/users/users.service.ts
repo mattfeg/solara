@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -30,8 +34,16 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: string) {
-    return this.prisma.user.findUnique({ where: { id } });
+  async findOne(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
   }
 
   update(id: string, data: UpdateUserDto) {
@@ -41,7 +53,15 @@ export class UsersService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.user.delete({ where: { id } });
+  async remove(id: string) {
+    try {
+      return await this.prisma.user.delete({
+        where: { id },
+      });
+    } catch (error) {
+      throw new NotFoundException(
+        `User with ID ${id} not found. Error: ${error}`,
+      );
+    }
   }
 }
