@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { LikesModule } from './likes/likes.module';
 import { CommentsModule } from './comments/comments.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CommentsModule } from './comments/comments.module';
     }),
     LikesModule,
     CommentsModule,
+    PrismaModule,
   ],
   controllers: [],
   providers: [

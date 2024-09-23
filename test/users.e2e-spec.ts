@@ -3,20 +3,24 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { PrismaModule } from '../src/prisma/prisma.module';
 
 describe('Users (e2e)', () => {
   let app: INestApplication;
   let authToken: string;
   let createdUserId: number;
-  const prisma = new PrismaService();
+  let prisma: PrismaService;
 
   beforeAll(async () => {
-    await prisma.user.deleteMany();
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule,PrismaModule.forRoot('.env.test')],
+      providers: [PrismaService]
     }).compile();
+    prisma = moduleFixture.get<PrismaService>(PrismaService)
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    await prisma.user.deleteMany();
 
     const uniqueEmail = `testUser+${Date.now()}@example.com`;
     await request(app.getHttpServer())
