@@ -1,19 +1,38 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { FollowsService } from './follows.service';
-import { CreateFollowDto } from './dto/create-follow.dto';
 
 @Controller('follows')
 export class FollowsController {
   constructor(private readonly followsService: FollowsService) {}
 
-  @Post()
-  create(@Body() createFollowDto: CreateFollowDto) {
-    return this.followsService.create(createFollowDto);
+  @Post(':id')
+  create(@Param('id') userId: string, @Body() data: { followingId: string }) {
+    return this.followsService.create(userId, data.followingId);
+  }
+
+  @Get()
+  findAll() {
+    return this.followsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.followsService.findOne(id);
   }
 
   @Get('user/:id')
-  findAll(@Param('id') id: string) {
+  findAllByUser(@Param('id') id: string) {
     return this.followsService.findAllByUser(id);
+  }
+
+  @Get('user/followers/:id')
+  findAllFollowersByUser(@Param('id') id: string) {
+    return this.followsService.findAllFollowersByUser(id);
+  }
+
+  @Get('user/followings/:id')
+  findAllFollowingsByUser(@Param('id') id: string) {
+    return this.followsService.findAllFollowingsByUser(id);
   }
 
   @Delete(':id')

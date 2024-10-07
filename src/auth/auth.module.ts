@@ -8,11 +8,11 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService,PrismaService],
-  imports: [UsersModule,JwtModule.register({
+  providers: [AuthService, PrismaService],
+  imports: [UsersModule, JwtModule.register({
     global: true,
     secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: '60s'}
+    signOptions: { expiresIn: '3600s' }
   })]
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -11,8 +11,8 @@ export class CreateFollowDto implements Prisma.FollowsCreateInput {
   @IsOptional()
   updated_at?: string | Date;
 
-  @IsString()
-  followerId: string;
+  // @IsString()
+  // followerId: string;
 
   @IsString()
   followingId: string;

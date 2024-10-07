@@ -4,43 +4,28 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { PrismaModule } from '../src/prisma/prisma.module';
+import { createTestUser } from './testUtils';
 
 describe('Users (e2e)', () => {
   let app: INestApplication;
   let authToken: string;
   let createdUserId: number;
   let prisma: PrismaService;
+  let user;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule,PrismaModule.forRoot('.env.test')],
-      providers: [PrismaService]
+      imports: [AppModule, PrismaModule.forRoot('.env.test')],
+      providers: [PrismaService],
     }).compile();
-    prisma = moduleFixture.get<PrismaService>(PrismaService)
+    prisma = moduleFixture.get<PrismaService>(PrismaService);
     app = moduleFixture.createNestApplication();
     await app.init();
 
     await prisma.user.deleteMany();
 
-    const uniqueEmail = `testUser+${Date.now()}@example.com`;
-    await request(app.getHttpServer())
-      .post('/users')
-      .send({
-        name: 'testUser',
-        email: uniqueEmail,
-        password: 'testPassword',
-      })
-      .expect(201);
-
-    const loginResponse = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({
-        email: uniqueEmail,
-        password: 'testPassword',
-      })
-      .expect(200);
-
-    authToken = loginResponse.body.access_token;
+    user = await createTestUser(app, 'userTest');
+    authToken = user.access_token;
   });
 
   afterAll(async () => {
